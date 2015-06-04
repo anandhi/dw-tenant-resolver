@@ -1,0 +1,10 @@
+resolver/MultiTenantDataSourceConfiguration.class
+resolver/TenantResolver.class
+resolver/TenantResolverFilter.class
+resolver/MultiTenantResolverBundle.class
+lib/MultiTenantJpaProperties$JpaConfigConstants.class
+lib/InvalidTenantException.class
+lib/TenantResolverConfig.class
+resolver/TenantDataSourceFactory.class
+lib/MultiTenantJpaProperties.class
+resolver/MultiTenantDataSourceManaged.class
