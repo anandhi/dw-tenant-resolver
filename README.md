@@ -25,7 +25,7 @@ multiTenantDataSourceConfiguration:
 Above configuration accepts, header name - which is been used the resolve the tenant for each request and initializes
 the necessary things to connect to defined datasource.
 
-and <code> enforceTenantHeaderInAllRequests <code> defines - whether headerName is optional or mandatory in all requests. If value is true and <code>tenantHeaderName</code> is missing, then request will be rejected, and thrown 400 with error, <error>Invalid Tenant Nil</error>
+and <code> enforceTenantHeaderInAllRequests </code> defines - whether headerName is optional or mandatory in all requests. If value is true and <code>tenantHeaderName</code> is missing, then request will be rejected, and thrown 400 response will be sent  <code>Invalid Tenant Nil</code>
 
 <b>Adding the tenant-resolver bundle to the Application:</b>
 
