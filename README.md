@@ -9,6 +9,7 @@ Dropwizard bunlde which helps to achieve multi-tenancy in dropwizard application
 ```yaml
 multiTenantDataSourceConfiguration:
   tenantHeaderName: X_TENANT_ID
+  enforceTenantHeaderInAllRequests: true
   databaseConfigurations:
     tenant_1:
       driverClass: com.mysql.jdbc.Driver
@@ -23,6 +24,8 @@ multiTenantDataSourceConfiguration:
 ```  
 Above configuration accepts, header name - which is been used the resolve the tenant for each request and initializes
 the necessary things to connect to defined datasource.
+
+and <code> enforceTenantHeaderInAllRequests <code> defines - whether headerName is optional or mandatory in all requests. If value is true and <code>tenantHeaderName</code> is missing, then request will be rejected, and thrown 400 with error, <error>Invalid Tenant Nil</error>
 
 <b>Adding the tenant-resolver bundle to the Application:</b>
 
@@ -78,6 +81,3 @@ and if you explicitly want to use the specific tenant's entity manager -
 ```java
 TenantResolver.getEntityManager(tenantName)
 ```
-Note: This bundle, also registers universal filter, where it expects all the requests should have headerName
-which is been defined in the configuration and value of it should be one of the valid tenants <i>[Valid tenants list
-is taken from the config where you have defined DB details for it]</i>
