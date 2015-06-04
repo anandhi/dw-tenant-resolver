@@ -72,7 +72,9 @@ private MultiTenantDataSourceConfiguration multiTenantDataSourceConfiguration =
  
 <b> How to use </b>
 
-Wherver you want an access of entity manager, which is been executed while serving the request - 
+If you want to access the entityManager, where this snippet is getting ececuted in the scope of request and request
+has tenantHeader present -
+
 ```java
 TenantResolver.getEntityManager()
 ```
