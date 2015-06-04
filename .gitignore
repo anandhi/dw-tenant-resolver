@@ -1,2 +1,7 @@
-tenant-resolver.iml
-target/*
+.classpath
+.project
+bin
+target
+.settings
+.idea
+*.iml
