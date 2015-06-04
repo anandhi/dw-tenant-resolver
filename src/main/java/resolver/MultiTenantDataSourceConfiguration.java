@@ -19,5 +19,11 @@ public class MultiTenantDataSourceConfiguration {
      */
     private String tenantHeaderName;
 
+    /**
+     * If true, then universal filter will added which expects
+     * header with tenantHeaderName should be present
+     */
+    private Boolean enforceTenantHeaderInAllRequests = true;
+
     private Map<String, DatabaseConfiguration> databaseConfigurations ;
 }

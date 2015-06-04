@@ -18,9 +18,14 @@ public abstract class MultiTenantResolverBundle<T> implements ConfiguredBundle<T
 
     @Override
     public void run(T configuration, Environment environment) {
-        environment.manage(new MultiTenantDataSourceManaged(getMultiTenantDataSourceConfiguration(configuration),
+        MultiTenantDataSourceConfiguration multiTenantDsConfiguration =
+                getMultiTenantDataSourceConfiguration(configuration);
+        environment.manage(new MultiTenantDataSourceManaged(multiTenantDsConfiguration,
                                                             getPackagesToScan()));
-        environment.addFilter(new TenantResolverFilter(), "/*");
+
+        if(multiTenantDsConfiguration.getEnforceTenantHeaderInAllRequests()){
+            environment.addFilter(new TenantResolverFilter(), "/*");
+        }
     }
 
     protected abstract MultiTenantDataSourceConfiguration getMultiTenantDataSourceConfiguration(T configuration);
