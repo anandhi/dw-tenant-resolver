@@ -15,13 +15,14 @@ public class TenantResolver {
     private static ThreadLocal<EntityManager> tenantEntityManager = new ThreadLocal<EntityManager>();
     private static ThreadLocal<Map<String, EntityManager>> tenantEntityManagerMap = new ThreadLocal<Map<String, EntityManager>>();
 
-    static {
-        tenantEntityManagerMap.set(new HashMap<String, EntityManager>());
-    }
 
     public static void setEntityManagerForTenant(String tenant) throws InvalidTenantException {
         if(!TenantResolverConfig.getValidTenants().contains(tenant)){
             throw new InvalidTenantException(tenant);
+        }
+
+        if(tenantEntityManagerMap.get() == null){
+            tenantEntityManagerMap.set(new HashMap<String, EntityManager>());
         }
 
         if(tenantEntityManagerMap.get().get(tenant) == null){
