@@ -30,30 +30,30 @@ During the initialization of dropwizard application, add tenant-resolver bundle,
 
 ```java
 @Override
-    public void initialize(Bootstrap<DropwizardServiceConfiguration> bootstrap) {
-        
-        bootstrap.addBundle(new MultiTenantResolverBundle<DropwizardServiceConfiguration>() {
-            @Override
-            protected MultiTenantDataSourceConfiguration getMultiTenantDataSourceConfiguration(
-                                                            DropwizardServiceConfiguration configuration) {
-                return configuration.getMultiTenantDataSourceConfiguration();
-            }
+public void initialize(Bootstrap<DropwizardServiceConfiguration> bootstrap) {
+    
+    bootstrap.addBundle(new MultiTenantResolverBundle<DropwizardServiceConfiguration>() {
+        @Override
+        protected MultiTenantDataSourceConfiguration getMultiTenantDataSourceConfiguration(
+                                                        DropwizardServiceConfiguration configuration) {
+            return configuration.getMultiTenantDataSourceConfiguration();
+        }
 
-            @Override
-            protected List<String> getPackagesToScan() {
-                List<String> packagesToScan  = new LinkedList<String>();
-                packagesToScan.add("com.sample.service.model");
-                packagesToScan.add("com.sample.service.extensions");
-                return packagesToScan;
-            }
-        });
+        @Override
+        protected List<String> getPackagesToScan() {
+            List<String> packagesToScan  = new LinkedList<String>();
+            packagesToScan.add("com.sample.service.model");
+            packagesToScan.add("com.sample.service.extensions");
+            return packagesToScan;
+        }
+    });
 ```
  and define the Configuration in Service Configuration like -
  
  ```java
- @Valid
-  private MultiTenantDataSourceConfiguration multiTenantDataSourceConfiguration = 
-                                                new MultiTenantDataSourceConfiguration();
+@Valid
+private MultiTenantDataSourceConfiguration multiTenantDataSourceConfiguration = 
+                                              new MultiTenantDataSourceConfiguration();
 ```
  
  and define the provider for the same like -
