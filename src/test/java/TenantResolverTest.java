@@ -47,6 +47,8 @@ public class TenantResolverTest {
     public void testValidEntityManagerWhenRequested(){
         try {
             assertThat(TenantResolver.getEntityManager("tenant_one")).isEqualTo(entityManagerForTenantOne);
+            assertThat(TenantResolver.getEntityManager("tenant_one")).isEqualTo(entityManagerForTenantOne);
+            assertThat(TenantResolver.getEntityManager("tenant_one")).isEqualTo(entityManagerForTenantOne);
         } catch (InvalidTenantException e) {
             e.printStackTrace();
         }

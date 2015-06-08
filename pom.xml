@@ -6,7 +6,7 @@
 
     <groupId>com.fk.multitenancy</groupId>
     <artifactId>tenant-resolver</artifactId>
-    <version>1.0</version>
+    <version>1.0.2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -73,7 +73,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.3.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -83,6 +82,7 @@
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-testing</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -92,6 +92,10 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -115,6 +119,7 @@
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-testing</artifactId>
                 <version>0.8.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -126,6 +131,11 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-mockito</artifactId>
                 <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-c3p0</artifactId>
+                <version>4.3.4.Final</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

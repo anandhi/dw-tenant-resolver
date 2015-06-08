@@ -21,16 +21,24 @@ public class TenantResolverFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if(request instanceof HttpServletRequest){
+            String error = null;
             try{
                 String headerValue = ((HttpServletRequest) request).getHeader(TenantResolverConfig.getTenantHeaderName());
-                if(TenantResolverConfig.getTenantHeaderName().contains(headerValue.toLowerCase())){
-                    TenantResolver.setEntityManagerForTenant(headerValue);
-                    chain.doFilter(request, response);
+                if(headerValue == null){
+                   error = "Tenant header is Missing!";
                 }
+
+            TenantResolver.setEntityManagerForTenant(headerValue);
+            chain.doFilter(request, response);
+
             }catch (InvalidTenantException ite){
+                error = ite.getMessage();
+            }
+
+            if(error != null){
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setStatus(HttpStatus.BAD_REQUEST_400);
-                httpResponse.getWriter().print(ite.getMessage());
+                httpResponse.getWriter().print(error);
             }
         }
     }

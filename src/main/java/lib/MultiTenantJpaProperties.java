@@ -2,6 +2,8 @@ package lib;
 
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import org.hibernate.cfg.ImprovedNamingStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -9,6 +11,7 @@ import java.util.Properties;
  * Created by anandhi on 03/06/15.
  */
 public class MultiTenantJpaProperties {
+    private final Logger logger = LoggerFactory.getLogger(MultiTenantJpaProperties.class);
     private Properties properties = new Properties();
     private DatabaseConfiguration dbConfiguration;
 
@@ -48,9 +51,11 @@ public class MultiTenantJpaProperties {
         properties.put("hibernate.connection.provider_class", "org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider");
         properties.put("hibernate.c3p0.min_size", JpaConfigConstants.MIN_POOL_SIZE.get(configuration.getMinSize()));
         properties.put("hibernate.c3p0.max_size", JpaConfigConstants.MAX_POOL_SIZE.get(configuration.getMaxSize()));
-        properties.put("hibernate.c3p0.timeout", configuration.getMaxWaitForConnection().toSeconds());
-        properties.put("hibernate.c3p0.idle_test_period", configuration.getCloseConnectionIfIdleFor().toSeconds());
+        properties.put("hibernate.c3p0.timeout", ((int) configuration.getCloseConnectionIfIdleFor().toSeconds()));
+        properties.put("hibernate.c3p0.idle_test_period", (int) configuration.getCheckConnectionHealthWhenIdleFor().toSeconds());
         properties.put("hibernate.ejb.naming_strategy", ImprovedNamingStrategy.INSTANCE);
+        properties.put("hibernate.c3p0.preferredTestQuery", "/* C3P0 Health Check */ SELECT 1");
+        logger.info("Configuring c3p0 connection pool with properties: " + properties);
     }
 
     public void addProperty(String propName, Object propValue){

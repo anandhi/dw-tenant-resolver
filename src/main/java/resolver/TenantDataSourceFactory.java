@@ -3,7 +3,6 @@ package resolver;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import lib.InvalidTenantException;
 import lib.MultiTenantJpaProperties;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +44,7 @@ public class TenantDataSourceFactory {
     }
 
     public static EntityManager createEntityManager(String tenant) throws InvalidTenantException {
-        if(StringUtils.isNotBlank(tenant) && emfCollection.containsKey(tenant.toLowerCase())){
+        if(tenant != null && emfCollection.containsKey(tenant.toLowerCase())){
             return emfCollection.get(tenant).createEntityManager();
         }else{
             throw new InvalidTenantException(tenant);
