@@ -1,7 +1,7 @@
 package resolver;
 
-import com.yammer.dropwizard.db.DatabaseConfiguration;
-import com.yammer.dropwizard.lifecycle.Managed;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.lifecycle.Managed;
 import lib.TenantResolverConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

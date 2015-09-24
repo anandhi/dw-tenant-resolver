@@ -1,6 +1,6 @@
 package resolver;
 
-import com.yammer.dropwizard.db.DatabaseConfiguration;
+import io.dropwizard.db.DataSourceFactory;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -25,5 +25,5 @@ public class MultiTenantDataSourceConfiguration {
      */
     private Boolean enforceTenantHeaderInAllRequests = true;
 
-    private Map<String, DatabaseConfiguration> databaseConfigurations ;
+    private Map<String, DataSourceFactory> databaseConfigurations ;
 }

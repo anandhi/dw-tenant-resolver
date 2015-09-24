@@ -1,6 +1,6 @@
 package resolver;
 
-import com.yammer.dropwizard.db.DatabaseConfiguration;
+import io.dropwizard.db.DataSourceFactory;
 import lib.InvalidTenantException;
 import lib.MultiTenantJpaProperties;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class TenantDataSourceFactory {
                                    List<String> packagesToScan){
         for(String tenant : multiTenantDataSourceConfiguration.getDatabaseConfigurations().keySet()){
             logger.info("Initializing the Entity Manager Factory for Tenant: " + tenant);
-            DatabaseConfiguration configuration = multiTenantDataSourceConfiguration.getDatabaseConfigurations().get(tenant);
+            DataSourceFactory configuration = multiTenantDataSourceConfiguration.getDatabaseConfigurations().get(tenant);
             MultiTenantJpaProperties properties = new MultiTenantJpaProperties(configuration);
             properties.addProperty("dynamicPersistenceProvider.packagesToScan", packagesToScan);
             EntityManagerFactory emf = Persistence.createEntityManagerFactory(tenant, properties.get());

@@ -1,8 +1,8 @@
 package resolver;
 
-import com.yammer.dropwizard.ConfiguredBundle;
-import com.yammer.dropwizard.config.Bootstrap;
-import com.yammer.dropwizard.config.Environment;
+import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 
 import java.util.List;
 
@@ -20,11 +20,11 @@ public abstract class MultiTenantResolverBundle<T> implements ConfiguredBundle<T
     public void run(T configuration, Environment environment) {
         MultiTenantDataSourceConfiguration multiTenantDsConfiguration =
                 getMultiTenantDataSourceConfiguration(configuration);
-        environment.manage(new MultiTenantDataSourceManaged(multiTenantDsConfiguration,
+        environment.lifecycle().manage(new MultiTenantDataSourceManaged(multiTenantDsConfiguration,
                                                             getPackagesToScan()));
 
         if(multiTenantDsConfiguration.getEnforceTenantHeaderInAllRequests()){
-            environment.addFilter(new TenantResolverFilter(), "/*");
+            environment.servlets().addFilter( "/*", new TenantResolverFilter());
         }
     }
 
