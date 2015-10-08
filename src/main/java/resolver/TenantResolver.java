@@ -25,13 +25,13 @@ public class TenantResolver {
             tenantEntityManagerMap.set(new HashMap<String, EntityManager>());
         }
 
-        if(tenantEntityManagerMap.get().get(tenant) == null){
+        if(tenantEntityManagerMap.get().get(tenant) != null) {
+            tenantEntityManagerMap.get().get(tenant).close();
+        }
             EntityManager em = TenantDataSourceFactory.createEntityManager(tenant);
             tenantEntityManagerMap.get().put(tenant, em);
             tenantEntityManager.set(em);
-        }else{
-            tenantEntityManager.set(tenantEntityManagerMap.get().get(tenant));
-        }
+
     }
 
     public static EntityManager getEntityManager(){
