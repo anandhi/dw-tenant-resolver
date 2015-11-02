@@ -26,7 +26,9 @@ public class TenantResolver {
         }
 
         if(tenantEntityManagerMap.get().get(tenant) != null) {
-            tenantEntityManagerMap.get().get(tenant).close();
+            if(tenantEntityManagerMap.get().get(tenant).isOpen()){
+                tenantEntityManagerMap.get().get(tenant).close();
+            }
         }
             EntityManager em = TenantDataSourceFactory.createEntityManager(tenant);
             tenantEntityManagerMap.get().put(tenant, em);
