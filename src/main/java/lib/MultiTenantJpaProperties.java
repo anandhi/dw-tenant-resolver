@@ -1,7 +1,6 @@
 package lib;
 
 import io.dropwizard.db.DataSourceFactory;
-import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ public class MultiTenantJpaProperties {
         properties.put("hibernate.c3p0.max_size", JpaConfigConstants.MAX_POOL_SIZE.get(configuration.getMaxSize()));
         properties.put("hibernate.c3p0.timeout", ((int) configuration.getMinIdleTime().toSeconds()));
         properties.put("hibernate.c3p0.idle_test_period", (int) configuration.getEvictionInterval().toSeconds());
-        properties.put("hibernate.ejb.naming_strategy", ImprovedNamingStrategy.INSTANCE);
+        properties.put("hibernate.ejb.naming_strategy", RespectfulImprovedNamingStrategy.INSTANCE);
         properties.put("hibernate.c3p0.preferredTestQuery", "/* C3P0 Health Check */ SELECT 1");
         logger.info("Configuring c3p0 connection pool with properties: " + properties);
     }
