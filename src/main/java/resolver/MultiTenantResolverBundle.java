@@ -4,6 +4,8 @@ import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -23,8 +25,9 @@ public abstract class MultiTenantResolverBundle<T> implements ConfiguredBundle<T
         environment.lifecycle().manage(new MultiTenantDataSourceManaged(multiTenantDsConfiguration,
                                                             getPackagesToScan()));
 
-        if(multiTenantDsConfiguration.getEnforceTenantHeaderInAllRequests()){
-            environment.servlets().addFilter( "/*", new TenantResolverFilter());
+        if(multiTenantDsConfiguration.getEnforceTenantHeaderInAllRequests().booleanValue()){
+            environment.servlets().addFilter("/*", new TenantResolverFilter()).addMappingForUrlPatterns(
+                EnumSet.allOf(DispatcherType.class), true, "/*");
         }
     }
 
