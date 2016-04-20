@@ -28,7 +28,7 @@ public class TenantResolverFilter implements Filter {
                    error = "Tenant header is Missing!";
                 }
 
-            TenantResolver.setEntityManagerForTenant(headerValue);
+            TenantResolver.setEntityManagerForTenant(headerValue.toLowerCase());
             chain.doFilter(request, response);
 
             }catch (InvalidTenantException ite){
