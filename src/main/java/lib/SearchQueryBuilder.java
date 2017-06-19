@@ -16,59 +16,59 @@ import java.util.Map.Entry;
  */
 public class SearchQueryBuilder {
 
-    public ArrayList<String> condition = new ArrayList<String>();
-    public ArrayList<String> orConditon = new ArrayList<String>();
+    private ArrayList<String> condition = new ArrayList<String>();
+    private ArrayList<String> orConditon = new ArrayList<String>();
 
     public String  construct(HashMap<String,Object> queryParam) {
         condition = new ArrayList<String>();
         orConditon = new ArrayList<String>();
         if (queryParam.containsKey("negate")) {
-            construct_negate_condition(queryParam.get("negate"));
+            constructNegateCondition(queryParam.get("negate"));
             queryParam.remove("negate");
         }
 
-        construct_condition(queryParam);
-        String query_string = "(";
+        constructCondition(queryParam);
+        String queryString = "(";
         for(String element : condition) {
-            query_string += element + " and ";
+            queryString += element + " and ";
         }
-        return query_string.substring(0, query_string.length() - 5) + " )";
+        return queryString.substring(0, queryString.length() - 5) + " )";
     }
 
-    public  void construct_condition(HashMap<String,Object> paramHash) {
+    private void constructCondition(HashMap<String, Object> paramHash) {
         for (Entry<String, Object> params : paramHash.entrySet()) {
             String key = params.getKey();
             Object value = params.getValue();
             ArrayList<String> valueList;
             if(value instanceof ArrayList) {
                 valueList = (ArrayList<String>) value;
-                build_query_from_list_and_comma_separete(key,valueList,"IN");
+                buildQueryFromListAndCommaSeparate(key,valueList,"IN");
             } else {
-                String value_string = (String) value;
+                String valueString = (String) value;
                 valueList = new ArrayList<String>();
-                for (String re : value_string.split(","))
+                for (String re : valueString.split(","))
                     valueList.add(re);
                 if (valueList.size() > 1)
-                    build_query_from_list_and_comma_separete(key, valueList, "IN");
-                else if (value_string == "NULL")
+                    buildQueryFromListAndCommaSeparate(key, valueList, "IN");
+                else if (valueString.equals("NULL"))
                     condition.add(key + " IS  NULL");
-                else if (value_string == "NOTNULL")
+                else if (valueString.equals("NOTNULL"))
                     condition.add(key + " IS NOT NULL");
-                else if (value_string.indexOf("..") != -1) {
-                    construct_range_condition(key, value_string, false);
+                else if (valueString.indexOf("..") != -1) {
+                    constructRangeCondition(key, valueString, false);
                 }
                 else {
                     try {
-                        construct_date_condition(key, value_string, false);
+                        constructDateCondition(key, valueString, false);
                     } catch (ParseException e) {
-                        condition.add(key + " = '" + value_string + "'");
+                        condition.add(key + " = '" + valueString + "'");
                     }
                 }
             }
         }
     }
 
-    public void construct_negate_condition(Object queryParam){
+    private void constructNegateCondition(Object queryParam){
 
         if(queryParam instanceof HashMap) {
             HashMap<String,Object> paramHash = ( HashMap<String,Object>) queryParam;
@@ -78,26 +78,26 @@ public class SearchQueryBuilder {
                 ArrayList<String> valueList;
                 if(value instanceof ArrayList) {
                     valueList = (ArrayList<String>) value;
-                    build_query_from_list_and_comma_separete(key,valueList,"NOT IN");
+                    buildQueryFromListAndCommaSeparate(key,valueList,"NOT IN");
                 } else {
-                    String value_string = (String) value;
+                    String valueString = (String) value;
                     valueList = new ArrayList<String>();
-                    for (String re: value_string.split(","))
+                    for (String re: valueString.split(","))
                         valueList.add(re);
                     if(valueList.size() > 1) {
-                        build_query_from_list_and_comma_separete(key, valueList, "NOT IN");
+                        buildQueryFromListAndCommaSeparate(key, valueList, "NOT IN");
                     }
-                    else if(value_string == "NULL")
+                    else if(valueString.equals("NULL"))
                         condition.add(key +" IS NOT NULL");
-                    else if(value_string == "NOTNULL")
+                    else if(valueString.equals("NOTNULL"))
                         condition.add(key + " IS NULL");
-                    else if(value_string.indexOf("..") != -1)
-                        construct_range_condition(key,value_string,true);
+                    else if(valueString.indexOf("..") != -1)
+                        constructRangeCondition(key,valueString,true);
                     else {
                         try {
-                            construct_date_condition(key, value_string, true);
+                            constructDateCondition(key, valueString, true);
                         } catch (ParseException e) {
-                            condition.add(key + " <> '" + value_string + "'");
+                            condition.add(key + " <> '" + valueString + "'");
                         }
                     }
                 }
@@ -107,69 +107,69 @@ public class SearchQueryBuilder {
     }
 
 
-    public void build_query_from_list_and_comma_separete(String key, ArrayList<String> valueList, String negate) {
+    private void buildQueryFromListAndCommaSeparate(String key, ArrayList<String> valueList, String negate) {
         String query = key + " "+ negate + " (";
         for(String element : valueList) {
             query += "'" + element + "',";
         }
         condition.add(query.substring(0, query.length() - 1) + ")");
     }
-    public void construct_range_condition(String key,String value_string, boolean negate) {
+    private void constructRangeCondition(String key, String valueString, boolean negate) {
         ArrayList<String> valueList = new ArrayList<String>();
-        for (String re: value_string.split("\\.."))
+        for (String re: valueString.split("\\.."))
             valueList.add(re);
 
         if(valueList.size() <= 0 || valueList.size() > 2)
             return;
 
-        String min_value = valueList.get(0);
-        String max_value = valueList.size() == 1 ? "NULL" : valueList.get(1);
-        if(min_value != "NULL") {
+        String minValue = valueList.get(0);
+        String maxValue = valueList.size() == 1 ? "NULL" : valueList.get(1);
+        if(minValue != "NULL") {
             try {
-                construct_date_min_range_condition(key, min_value, negate);
+                constructDateMinRangeCondition(key, minValue, negate);
             } catch (ParseException e) {
                 if (negate)
-                    orConditon.add(key + " < '" + min_value + "'");
+                    orConditon.add(key + " < '" + minValue + "'");
                 else
-                    condition.add(key + " >= '" + min_value + "'");
+                    condition.add(key + " >= '" + minValue + "'");
             }
         }
 
-        if(max_value != "NULL") {
+        if(maxValue != "NULL") {
             try {
-                construct_date_max_range_condition(key, max_value, negate);
+                constructDateMaxRangeCondition(key, maxValue, negate);
             } catch (ParseException e) {
                 if (negate)
-                    orConditon.add(key + " > '" + max_value + "'");
+                    orConditon.add(key + " > '" + maxValue + "'");
                 else
-                    condition.add(key + " <= '" + max_value + "'");
+                    condition.add(key + " <= '" + maxValue + "'");
             }
         }
 
         if(negate) {
-            String or_string = "(";
+            String orString = "(";
             for(String element : orConditon) {
-                or_string += element + " or ";
+                orString += element + " or ";
             }
-            condition.add(or_string.substring(0, or_string.length() - 4) + " )");
+            condition.add(orString.substring(0, orString.length() - 4) + " )");
             orConditon.clear();
         }
     }
 
-    public void construct_date_min_range_condition(String key,String value,boolean negate) throws ParseException{
+    private void constructDateMinRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         for (String re: value.split("T"))
             dateList.add(re);
 
         if(dateList.size() > 1) {
-            String date = format_date(value,"yyyy-MM-dd'T'HH:mm:ss",false);
+            String date = formatDate(value,"yyyy-MM-dd'T'HH:mm:ss",false);
             if(negate)
                 orConditon.add(key + " < '" + date + "'");
             else
                 condition.add(key + " >= '" + date + "'");
         }
         else {
-            String date = format_date(value,"yyyy-MM-dd",false);
+            String date = formatDate(value,"yyyy-MM-dd",false);
             if(negate)
                 orConditon.add(key + " < '" + date + "'");
             else
@@ -177,20 +177,20 @@ public class SearchQueryBuilder {
         }
     }
 
-    public void construct_date_max_range_condition(String key,String value,boolean negate) throws ParseException{
+    private void constructDateMaxRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         for (String re: value.split("T"))
             dateList.add(re);
 
         if(dateList.size() > 1) {
-            String date = format_date(value,"yyyy-MM-dd'T'HH:mm:ss",false);
+            String date = formatDate(value,"yyyy-MM-dd'T'HH:mm:ss",false);
             if(negate)
                 orConditon.add(key + " > '" + date + "'");
             else
                 condition.add(key + " <= '" + date + "'");
         }
         else {
-            String date = format_date(value,"yyyy-MM-dd",true);
+            String date = formatDate(value,"yyyy-MM-dd",true);
             if(negate)
                 orConditon.add(key + " >= '" + date + "'");
             else
@@ -198,41 +198,38 @@ public class SearchQueryBuilder {
         }
     }
 
-    public String format_date(String value,String Format,boolean plusOne) throws ParseException{
+    private String formatDate(String value, String Format, boolean plusOne) throws ParseException{
         SimpleDateFormat dateFormat = new SimpleDateFormat(Format);
         Date date = dateFormat.parse(value);
         if(plusOne) {
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             c.add(Calendar.DATE, 1);
-            String formated_date = dateFormat.format(c.getTime());
-            return formated_date;
+            return dateFormat.format(c.getTime());
         }
-
-        String formated_date = dateFormat.format(date);
-        return formated_date;
+        return dateFormat.format(date);
     }
 
-    public void construct_date_condition(String key,String value, boolean negate)  throws ParseException{
+    private void constructDateCondition(String key, String value, boolean negate)  throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         for (String re: value.split("T"))
             dateList.add(re);
 
         if(dateList.size() > 1) {
-            String date = format_date(value,"yyyy-MM-dd'T'HH:mm:ss",false);
+            String date = formatDate(value,"yyyy-MM-dd'T'HH:mm:ss",false);
             if(negate)
                 condition.add(key +  " <> '" + date + "'");
             else
                 condition.add(key + " = '" + date + "'");
         } else {
-            String start_date = format_date(value,"yyyy-MM-dd",false);
-            String end_date = format_date(value,"yyyy-MM-dd",true);
+            String startDate = formatDate(value,"yyyy-MM-dd",false);
+            String endDate = formatDate(value,"yyyy-MM-dd",true);
 
             if(negate)
-                condition.add("(" + key + " < '" + start_date + "' or " + key + " >= '" + end_date +"')");
+                condition.add("(" + key + " < '" + startDate + "' or " + key + " >= '" + endDate +"')");
             else {
-                condition.add(key + " >= '" + start_date + "'");
-                condition.add(key + " < '" + end_date + "'");
+                condition.add(key + " >= '" + startDate + "'");
+                condition.add(key + " < '" + endDate + "'");
             }
         }
     }
