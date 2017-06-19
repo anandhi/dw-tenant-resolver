@@ -50,6 +50,5 @@ public class TenantResolverFilter implements Filter {
 
     @Override
     public void destroy() {
-        System.out.println("I am here in after destroy ");
     }
 }
