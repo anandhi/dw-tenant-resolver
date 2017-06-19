@@ -34,7 +34,12 @@ public class TenantResolverFilter implements Filter {
             }catch (InvalidTenantException ite){
                 error = ite.getMessage();
             }
+            finally {
+                if(TenantResolver.getEntityManager().isOpen()){
+                    TenantResolver.getEntityManager().close();
+                }
 
+            }
             if(error != null){
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setStatus(HttpStatus.BAD_REQUEST_400);
@@ -45,6 +50,5 @@ public class TenantResolverFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 }
