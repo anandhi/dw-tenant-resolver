@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
  */
 public class JpaTransactionInterceptor implements MethodInterceptor {
 
-    private EntityManager em = TenantResolver.getEntityManager();
 
     @Transactional
     private static class Internal {
@@ -29,7 +28,7 @@ public class JpaTransactionInterceptor implements MethodInterceptor {
      * @throws Throwable
      */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-        em = TenantResolver.getEntityManager();
+        EntityManager em = TenantResolver.getEntityManager();
         Transactional transactional = readTransactionMetadata(methodInvocation);
 
         //Allow joining of transactions if there is an enclosing @Transactional method.
@@ -37,7 +36,7 @@ public class JpaTransactionInterceptor implements MethodInterceptor {
             return methodInvocation.proceed();
         }
 
-        final EntityTransaction txn = em.getTransaction();
+        EntityTransaction txn = em.getTransaction();
         txn.begin();
         Object result;
         try {
