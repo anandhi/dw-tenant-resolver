@@ -32,23 +32,22 @@ public class SearchQueryBuilder {
             queryParam.remove("or");
         }
         constructCondition(queryParam);
-        String queryString = "(";
+        String queryString = "";
         for(String element : condition) {
             queryString += element + " and ";
         }
-        String andCondition = queryString.substring(0, queryString.length() - 5) + " )";
-        String orCondString = "";
+        String andConditionString = queryString.substring(0, queryString.length() - 5);
+        String orConditionString = "";
         if(orMap.size() >= 1){
             condition = new ArrayList<String>();
             orConditon = new ArrayList<String>();
             constructCondition(orMap);
-            String orConditionString = "(";
             for(String element : condition) {
                 orConditionString +=  " or " + element;
             }
-            orCondString = orConditionString.substring(0, orConditionString.length()) + " )";
+
         }
-        return andCondition + orCondString;
+        return "( " + andConditionString  + orConditionString + " )";
     }
 
 
