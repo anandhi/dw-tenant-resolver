@@ -22,18 +22,35 @@ public class SearchQueryBuilder {
     public String  construct(HashMap<String,Object> queryParam) {
         condition = new ArrayList<String>();
         orConditon = new ArrayList<String>();
+        HashMap<String, Object> orMap = new HashMap<String, Object>();
         if (queryParam.containsKey("negate")) {
             constructNegateCondition(queryParam.get("negate"));
             queryParam.remove("negate");
         }
-
+        if(queryParam.containsKey("or")) {
+            orMap = (HashMap<String, Object>) queryParam.get("or");
+            queryParam.remove("or");
+        }
         constructCondition(queryParam);
         String queryString = "(";
         for(String element : condition) {
             queryString += element + " and ";
         }
-        return queryString.substring(0, queryString.length() - 5) + " )";
+        String andCondition = queryString.substring(0, queryString.length() - 5) + " )";
+        String orCondString = "";
+        if(orMap.size() >= 1){
+            condition = new ArrayList<String>();
+            orConditon = new ArrayList<String>();
+            constructCondition(orMap);
+            String orConditionString = "(";
+            for(String element : condition) {
+                orConditionString +=  " or " + element;
+            }
+            orCondString = orConditionString.substring(0, orConditionString.length()) + " )";
+        }
+        return andCondition + orCondString;
     }
+
 
     private void constructCondition(HashMap<String, Object> paramHash) {
         for (Entry<String, Object> params : paramHash.entrySet()) {
