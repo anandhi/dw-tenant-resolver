@@ -6,7 +6,7 @@
 
     <groupId>com.fk.multitenancy</groupId>
     <artifactId>tenant-resolver</artifactId>
-    <version>2.5.0</version>
+    <version>2.6.5</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -151,4 +151,29 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>fk-art-snapshot</id>
+            <name>Flipkart-Artifactory</name>
+            <url>http://10.85.59.116/artifactory/v1.0/artifacts/libs-snapshots-local</url>
+        </repository>
+        <repository>
+            <id>fk-art-release</id>
+            <name>Flipkart-Artifactory</name>
+            <url>http://10.85.59.116/artifactory/v1.0/artifacts/libs-release-local</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>fk-art-snapshot</id>
+            <name>libs-snapshot</name>
+            <url>http://10.85.59.116/artifactory/v1.0/artifacts/libs-snapshots-local</url>
+        </snapshotRepository>
+        <repository>
+            <id>fk-art-release</id>
+            <name>libs-rel</name>
+            <url>http://10.85.59.116/artifactory/v1.0/artifacts/libs-release-local</url>
+        </repository>
+
+    </distributionManagement>
 </project>
