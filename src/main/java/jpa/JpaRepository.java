@@ -161,7 +161,7 @@ public class JpaRepository<T, ID extends Serializable>
         return findByQuery(parameters, pageRequest, entityClass.getSimpleName());
     }
     public Page<T> findByQuery(HashMap<String, Object> parameters, PageRequest pageRequest, String entityName) {
-        return findByQuery(parameters, pageRequest, "id", "asc", entityName);
+        return findByQuery(parameters, pageRequest, null, null, entityName);
     }
 
     public Page<T> findByQuery(HashMap<String, Object> parameters, PageRequest pageRequest, String orderBy, String order) {
@@ -174,7 +174,9 @@ public class JpaRepository<T, ID extends Serializable>
         Long count = (Long) getEntityManager()
                 .createQuery("select count(x) from " + entityName + " x " + whereClause)
                 .getSingleResult();
-        whereClause += " order by x." + orderBy + " " + order;
+        if(orderBy != null && order != null){
+            whereClause += " order by x." + orderBy + " " + order;
+        }
         List<T> content = getEntityManager()
                 .createQuery("select x from " + entityName + " x " + whereClause)
                 .setFirstResult(pageRequest.getOffset())
