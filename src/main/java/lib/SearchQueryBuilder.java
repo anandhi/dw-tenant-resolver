@@ -163,7 +163,7 @@ public class SearchQueryBuilder {
     private void constructDateMinRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         if(!value.contains("T")){
-            return ;
+            throw new ParseException("Date should contain 'T'", 1)   ;
         }
         for (String re: value.split("T"))
             dateList.add(re);
@@ -187,7 +187,7 @@ public class SearchQueryBuilder {
     private void constructDateMaxRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         if(!value.contains("T")){
-            return ;
+            throw new ParseException("Date should contain 'T'", 1)  ;
         }
         for (String re: value.split("T"))
             dateList.add(re);
@@ -223,7 +223,7 @@ public class SearchQueryBuilder {
     private void constructDateCondition(String key, String value, boolean negate)  throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
         if(!value.contains("T")){
-            return ;
+            throw new ParseException("Date should contain 'T'", 1)  ;
         }
         for (String re: value.split("T"))
             dateList.add(re);
