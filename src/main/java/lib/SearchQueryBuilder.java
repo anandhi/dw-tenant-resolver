@@ -151,13 +151,20 @@ public class SearchQueryBuilder {
             for(String element : orConditon) {
                 orString += element + " or ";
             }
-            condition.add(orString.substring(0, orString.length() - 4) + " )");
-            orConditon.clear();
+            if(orString.length() > 4){
+                condition.add(orString.substring(0, orString.length() - 4) + " )");
+                orConditon.clear();
+            }
+
+
         }
     }
 
     private void constructDateMinRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
+        if(!value.contains("T")){
+            return ;
+        }
         for (String re: value.split("T"))
             dateList.add(re);
 
@@ -179,6 +186,9 @@ public class SearchQueryBuilder {
 
     private void constructDateMaxRangeCondition(String key, String value, boolean negate) throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
+        if(!value.contains("T")){
+            return ;
+        }
         for (String re: value.split("T"))
             dateList.add(re);
 
@@ -212,6 +222,9 @@ public class SearchQueryBuilder {
 
     private void constructDateCondition(String key, String value, boolean negate)  throws ParseException{
         ArrayList<String> dateList = new ArrayList<String>();
+        if(!value.contains("T")){
+            return ;
+        }
         for (String re: value.split("T"))
             dateList.add(re);
 

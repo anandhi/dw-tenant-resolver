@@ -19,8 +19,6 @@ public class SearchQueryBuilderTest {
         paramHash.put("origin","NOTNULL");
         paramHash.put("age","1..10");
         paramHash.put("date","2013-01-21T00:01:02..2013-12-13T04:05:06");
-        paramHash.put("update_date","2013-01-21..2013-12-13");
-        paramHash.put("delete_date","2013-01-21");
         paramHash.put("due_date","2013-01-21T00:01:02");
         ArrayList<String> client_ref_id = new ArrayList<String>();
         client_ref_id.add("aaa");
@@ -42,8 +40,6 @@ public class SearchQueryBuilderTest {
         negate.put("id","123456");
 
         negate.put("date","2013-01-21T00:01:02..2013-12-13T04:05:06");
-        negate.put("update_date","2013-01-21..2013-12-13");
-        negate.put("delete_date","2013-01-21");
         negate.put("due_date","2013-01-21T00:01:02");
         ArrayList<String> client_ref_id_negate = new ArrayList<String>();
         client_ref_id_negate.add("aaa");
