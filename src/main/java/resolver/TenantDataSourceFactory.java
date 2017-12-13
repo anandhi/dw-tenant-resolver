@@ -23,31 +23,31 @@ public class TenantDataSourceFactory {
 
     public static void initialize(MultiTenantDataSourceConfiguration multiTenantDataSourceConfiguration,
                                    List<String> packagesToScan){
-        for(String tenant : multiTenantDataSourceConfiguration.getDatabaseConfigurations().keySet()){
-            logger.info("Initializing the Entity Manager Factory for Tenant: " + tenant);
-            DataSourceFactory configuration = multiTenantDataSourceConfiguration.getDatabaseConfigurations().get(tenant);
+        for(String tenantConfiguration : multiTenantDataSourceConfiguration.getDatabaseConfigurations().keySet()){
+            logger.info("Initializing the Entity Manager Factory for Tenant Configuration : " + tenantConfiguration);
+            DataSourceFactory configuration = multiTenantDataSourceConfiguration.getDatabaseConfigurations().get(tenantConfiguration);
             MultiTenantJpaProperties properties = new MultiTenantJpaProperties(configuration);
             properties.addProperty("dynamicPersistenceProvider.packagesToScan", packagesToScan);
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory(tenant, properties.get());
-            addTenantDataSource(tenant, emf);
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory(tenantConfiguration, properties.get());
+            addTenantDataSource(tenantConfiguration, emf);
         }
     }
 
-    public static void addTenantDataSource(String tenant, EntityManagerFactory emf){
-        emfCollection.put(tenant, emf);
+    public static void addTenantDataSource(String tenantConfiguration, EntityManagerFactory emf) {
+        emfCollection.put(tenantConfiguration, emf);
     }
 
     public static void tearDown(){
-        for(String tenant : emfCollection.keySet()){
-            emfCollection.get(tenant).close();
+        for(String tenantConfiguration : emfCollection.keySet()) {
+            emfCollection.get(tenantConfiguration).close();
         }
     }
 
-    public static EntityManager createEntityManager(String tenant) throws InvalidTenantException {
-        if(tenant != null && emfCollection.containsKey(tenant.toLowerCase())){
-            return emfCollection.get(tenant).createEntityManager();
-        }else{
-            throw new InvalidTenantException(tenant);
+    public static EntityManager createEntityManager(String tenantConfiguration) throws InvalidTenantException {
+        if(tenantConfiguration != null && emfCollection.containsKey(tenantConfiguration)) {
+            return emfCollection.get(tenantConfiguration).createEntityManager();
+        } else {
+            throw new InvalidTenantException(tenantConfiguration);
         }
     }
 

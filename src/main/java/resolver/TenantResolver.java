@@ -16,24 +16,23 @@ public class TenantResolver {
     private static ThreadLocal<Map<String, EntityManager>> tenantEntityManagerMap = new ThreadLocal<Map<String, EntityManager>>();
 
 
-    public static void setEntityManagerForTenant(String tenant) throws InvalidTenantException {
-        if(!TenantResolverConfig.getValidTenants().contains(tenant)){
-            throw new InvalidTenantException(tenant);
+    public static void setEntityManagerForTenant(String tenantConfiguration) throws InvalidTenantException {
+        if(!TenantResolverConfig.getValidTenantConfigurations().contains(tenantConfiguration)){
+            throw new InvalidTenantException(tenantConfiguration);
         }
 
         if(tenantEntityManagerMap.get() == null){
             tenantEntityManagerMap.set(new HashMap<String, EntityManager>());
         }
 
-        if(tenantEntityManagerMap.get().get(tenant) != null) {
-            if(tenantEntityManagerMap.get().get(tenant).isOpen()){
-                tenantEntityManagerMap.get().get(tenant).close();
+        if(tenantEntityManagerMap.get().get(tenantConfiguration) != null) {
+            if(tenantEntityManagerMap.get().get(tenantConfiguration).isOpen()){
+                tenantEntityManagerMap.get().get(tenantConfiguration).close();
             }
         }
-            EntityManager em = TenantDataSourceFactory.createEntityManager(tenant);
-            tenantEntityManagerMap.get().put(tenant, em);
+            EntityManager em = TenantDataSourceFactory.createEntityManager(tenantConfiguration);
+            tenantEntityManagerMap.get().put(tenantConfiguration, em);
             tenantEntityManager.set(em);
-
     }
 
     public static EntityManager getEntityManager(){

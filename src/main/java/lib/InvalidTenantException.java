@@ -5,8 +5,12 @@ package lib;
  */
 public class InvalidTenantException extends Exception {
 
-    public InvalidTenantException(String tenant){
-        super("Tenant " + tenant + " is Invalid");
+    public InvalidTenantException(String tenantConfiguration){
+        super("Tenant Configuration : " + tenantConfiguration + " is Invalid or Undefined");
+    }
+
+    public InvalidTenantException(String tenantConfiguration, String errorMessage){
+        super("Tenant Configuration Resolution failed : " + errorMessage);
     }
 
 }
