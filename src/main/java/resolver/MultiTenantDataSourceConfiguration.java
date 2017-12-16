@@ -22,7 +22,7 @@ public class MultiTenantDataSourceConfiguration {
      * defines the additional configuration keys,
      * which paired with tenantHeaderName, will define the tenantConfiguration
      */
-    private List<String> auxiliaryConfigurationPivots;
+    private List<List<List<String>>> auxiliaryConfigurationPivots;
 
     /**
      * If true, then universal filter will added which expects

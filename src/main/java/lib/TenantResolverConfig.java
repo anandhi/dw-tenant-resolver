@@ -17,14 +17,14 @@ public class TenantResolverConfig {
     @Getter
     private static String tenantHeaderName;
     @Getter
-    private static List<String> auxiliaryHeaderPivots;
+    private static List<List<List<String>>> auxiliaryConfigurationPivots;
     @Getter
     private static List<String> validTenantConfigurations = new LinkedList<String>();
 
     public static void initialize(MultiTenantDataSourceConfiguration configuration){
         enforceTenantHeaderInAllRequests = configuration.getEnforceTenantHeaderInAllRequests();
         tenantHeaderName = configuration.getTenantHeaderName();
-        auxiliaryHeaderPivots = configuration.getAuxiliaryConfigurationPivots();
+        auxiliaryConfigurationPivots = configuration.getAuxiliaryConfigurationPivots();
         validTenantConfigurations.addAll(configuration.getDatabaseConfigurations().keySet());
     }
 
