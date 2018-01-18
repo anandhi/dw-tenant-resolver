@@ -64,7 +64,13 @@ public class TenantResolverFilter implements Filter {
             pivotsValue = extractHeaderValue(request, TenantResolverConfig.getTenantHeaderName(), true);
         }
 
-        if (TenantResolverConfig.getAuxiliaryConfigurationPivots() != null) {
+        boolean enableAuxConfResolution = (
+                (TenantResolverConfig.getAuxiliaryConfigurationPivots() != null) &&
+                (TenantResolverConfig.getWhitelistedBUsForAuxConf() != null) &&
+                (TenantResolverConfig.getWhitelistedBUsForAuxConf().contains(pivotsValue.toLowerCase()))
+        );
+
+        if (enableAuxConfResolution) {
             for (List<List<String>> priorityConfigurationList : TenantResolverConfig.getAuxiliaryConfigurationPivots()) {
                 String atomicPivotValue = derivePivotValue(request, priorityConfigurationList);
                 if (pivotsValue == null) {

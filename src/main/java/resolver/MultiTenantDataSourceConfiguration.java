@@ -25,6 +25,11 @@ public class MultiTenantDataSourceConfiguration {
     private List<List<List<String>>> auxiliaryConfigurationPivots;
 
     /**
+     * defines the whitelisted business units for which the auxiliary configuration will hold true
+     */
+    private List<String> whitelistedBUsForAuxConf;
+
+    /**
      * If true, then universal filter will added which expects
      * header with tenantHeaderName should be present
      */
