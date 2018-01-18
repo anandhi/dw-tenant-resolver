@@ -17,6 +17,9 @@ public class TenantResolver {
 
 
     public static void setEntityManagerForTenant(String tenantConfiguration) throws InvalidTenantException {
+        if (tenantConfiguration != null) {
+            tenantConfiguration = tenantConfiguration.toLowerCase();
+        }
         if(!TenantResolverConfig.getValidTenantConfigurations().contains(tenantConfiguration)){
             throw new InvalidTenantException(tenantConfiguration);
         }
@@ -40,6 +43,9 @@ public class TenantResolver {
     }
 
     public static EntityManager getEntityManager(String tenantName) throws InvalidTenantException {
+        if (tenantName != null) {
+            tenantName = tenantName.toLowerCase();
+        }
         setEntityManagerForTenant(tenantName);
         return tenantEntityManager.get();
     }
