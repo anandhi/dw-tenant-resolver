@@ -22,7 +22,7 @@ public class MultiTenantDataSourceConfiguration {
      * defines the additional configuration keys,
      * which paired with tenantHeaderName, will define the tenantConfiguration
      */
-    private List<List<List<String>>> auxiliaryConfigurationPivots;
+    private Map<String, List<List<List<String>>>> buAuxiliaryConfigurationPivots;
 
     /**
      * defines the whitelisted business units for which the auxiliary configuration will hold true
@@ -37,7 +37,7 @@ public class MultiTenantDataSourceConfiguration {
 
     /**
      * defines the database configurations,
-     * with each key corresponding to combination of expected values of tenantHeaderName & auxiliaryConfigurationPivots
+     * with each key corresponding to combination of expected values of tenantHeaderName & buAuxiliaryConfigurationPivots
      */
     private Map<String, DataSourceFactory> databaseConfigurations ;
 }

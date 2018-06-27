@@ -63,20 +63,23 @@ public class TenantResolverFilter implements Filter {
         if (TenantResolverConfig.getEnforceTenantHeaderInAllRequests()) {
             pivotsValue = extractHeaderValue(request, TenantResolverConfig.getTenantHeaderName(), true);
         }
+        String tenantHeaderValue = pivotsValue;
 
         boolean enableAuxConfResolution = (
-                (TenantResolverConfig.getAuxiliaryConfigurationPivots() != null) &&
+                (TenantResolverConfig.getBuAuxiliaryConfigurationPivots() != null) &&
+                (TenantResolverConfig.getBuAuxiliaryConfigurationPivots().get(tenantHeaderValue) != null) &&
                 (TenantResolverConfig.getWhitelistedBUsForAuxConf() != null) &&
                 (TenantResolverConfig.getWhitelistedBUsForAuxConf().contains(pivotsValue.toLowerCase()))
         );
 
         if (enableAuxConfResolution) {
-            for (List<List<String>> priorityConfigurationList : TenantResolverConfig.getAuxiliaryConfigurationPivots()) {
+            for (List<List<String>> priorityConfigurationList : TenantResolverConfig.getBuAuxiliaryConfigurationPivots().get(tenantHeaderValue)) {
                 String atomicPivotValue = derivePivotValue(request, priorityConfigurationList);
                 if (pivotsValue == null) {
                     pivotsValue = atomicPivotValue;
                 }
                 else {
+                    if(atomicPivotValue == null) atomicPivotValue = "default";
                     pivotsValue = pivotsValue + PIVOTS_CONCAT_CHAR + atomicPivotValue;
                 }
             }
@@ -87,18 +90,12 @@ public class TenantResolverFilter implements Filter {
     private String derivePivotValue(ServletRequest request, List<List<String>> priorityConfigurationList)
             throws InvalidTenantException {
         String pivotValue =  null;
-        String errorMessage = "";
         for (List<String> configList : priorityConfigurationList) {
             if(pivotValue == null) {
                 pivotValue = extractPivotValue(request, configList.get(0).toLowerCase(), configList.get(1));
-                if (pivotValue == null)
-                    errorMessage += configList.get(0) + " MISSING. ";
             }
         }
-        if(pivotValue == null) {
-            String error = TENANT_PARAM_MISSING_MSG + errorMessage;
-            throw new InvalidTenantException(pivotValue, error);
-        }
+
         return pivotValue;
     }
 
