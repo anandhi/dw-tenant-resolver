@@ -1,6 +1,5 @@
 package lib;
 
-import io.dropwizard.db.DataSourceFactory;
 import lombok.Getter;
 import resolver.MultiTenantDataSourceConfiguration;
 
@@ -17,7 +16,7 @@ public class TenantResolverConfig {
     @Getter
     private static String tenantHeaderName;
     @Getter
-    private static List<List<List<String>>> auxiliaryConfigurationPivots;
+    private static Map<String, List<List<List<String>>>> buAuxiliaryConfigurationPivots;
     @Getter
     private static List<String> whitelistedBUsForAuxConf;
     @Getter
@@ -26,7 +25,7 @@ public class TenantResolverConfig {
     public static void initialize(MultiTenantDataSourceConfiguration configuration){
         enforceTenantHeaderInAllRequests = configuration.getEnforceTenantHeaderInAllRequests();
         tenantHeaderName = configuration.getTenantHeaderName();
-        auxiliaryConfigurationPivots = configuration.getAuxiliaryConfigurationPivots();
+        buAuxiliaryConfigurationPivots = configuration.getBuAuxiliaryConfigurationPivots();
         whitelistedBUsForAuxConf = configuration.getWhitelistedBUsForAuxConf();
         validTenantConfigurations.addAll(configuration.getDatabaseConfigurations().keySet());
     }
